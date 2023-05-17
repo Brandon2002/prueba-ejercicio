@@ -1,72 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Procesar archivos de texto</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script>
-    // Función para leer el archivo de texto y procesarlo
-    function procesarArchivo(archivo) {
-      var lector = new FileReader();
-      lector.onload = function(event) {
-        var contenido = event.target.result;
-        // Procesar el contenido del archivo
-        var datos = contenido.split('\n'); // Separar el contenido por saltos de línea
-        // Hacer algo con los datos (ejemplo: agregarlos a una tabla)
-        var tabla = document.getElementById('tablaDatos');
-        for (var i = 0; i < datos.length; i++) {
-          var fila = document.createElement('tr');
-          var celdas = datos[i].split(';'); // Suponiendo que los datos están separados por ;
-          for (var j = 0; j < celdas.length; j++) {
-            var celda = document.createElement(i === 0 ? 'th' : 'td');
-            celda.textContent = celdas[j];
-            fila.appendChild(celda);
-          }
-          tabla.appendChild(fila);
-        }
-      };
-      lector.readAsText(archivo);
-    }
-
-    // Función para procesar múltiples archivos
-    function procesarArchivos(event) {
-      var archivos = event.target.files;
-      for (var i = 0; i < archivos.length; i++) {
-        procesarArchivo(archivos[i]);
-      }
-    }
-
-    // Función para exportar la tabla a CSV
-    function exportarCSV() {
-      var tabla = document.getElementById('tablaDatos');
-      var filas = tabla.querySelectorAll('tr');
-      var csv = '';
-      for (var i = 0; i < filas.length; i++) {
-        var celdas = filas[i].querySelectorAll('th, td');
-        for (var j = 0; j < celdas.length; j++) {
-          csv += celdas[j].textContent + ';'; // Separador de campos CSV
-        }
-        csv += '\n'; // Salto de línea entre filas
-      }
-      // Descargar el archivo CSV
-      var enlace = document.createElement('a');
-      enlace.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
-      enlace.setAttribute('download', 'datos.csv');
-      enlace.style.display = 'none';
-      document.body.appendChild(enlace);
-      enlace.click();
-      document.body.removeChild(enlace);
-    }
-  </script>
+  <title>Subir archivos</title>
 </head>
 <body>
-  <h1>Procesar archivos de texto</h1>
-  <input type="file" id="inputArchivos" multiple onchange="procesarArchivos(event)">
+  <h1>Subir archivos</h1>
+  <label for="inputArchivos">Seleccionar archivos:</label>
+  <input type="file" id="inputArchivos" multiple style="display: none;">
   <br>
-  <br>
-  <table id="tablaDatos" border="1">
-    <!-- Aquí se mostrarán los datos procesados -->
-  </table>
-  <br>
-  <button onclick="exportarCSV()">Exportar a CSV</button>
+  <button id="botonSubir">Subir</button>
+
+  <script>
+    document.getElementById('botonSubir').addEventListener('click', function() {
+      document.getElementById('inputArchivos').click();
+    });
+
+    document.getElementById('inputArchivos').addEventListener('change', function() {
+      var archivos = this.files;
+
+      // Realizar acciones con los archivos subidos
+      // Aquí puedes agregar la lógica que necesites para procesar los archivos
+    });
+  </script>
 </body>
 </html>
