@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Procesamiento de archivos de texto</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+  <input type="file" id="fileInput" multiple>
+  <button onclick="processFiles()">Procesar archivos</button>
+
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Columna 1</th>
+        <th>Columna 2</th>
+        <!-- Agrega aquí las columnas adicionales según tu estructura de datos -->
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <script>
+    function processFiles() {
+      var fileInput = document.getElementById('fileInput');
+      var files = fileInput.files;
+
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var contents = e.target.result;
+          processData(contents);
+        };
+
+        reader.readAsText(file);
+      }
+    }
+
+    function processData(contents) {
+      // Aquí puedes procesar y organizar el contenido del archivo
+      // según tus necesidades. Por ejemplo, puedes dividirlo en líneas
+      // o utilizar expresiones regulares para extraer datos específicos.
+
+      // Una vez que tengas los datos organizados, puedes agregarlos a la tabla.
+      var rows = contents.split('\n');
+
+      for (var i = 0; i < rows.length; i++) {
+        var columns = rows[i].split(',');
+
+        var table = document.getElementById('dataTable');
+        var newRow = table.insertRow(-1);
+
+        for (var j = 0; j < columns.length; j++) {
+          var cell = newRow.insertCell(j);
+          cell.innerHTML = columns[j];
+        }
+      }
+    }
+  </script>
+</body>
+</html>
