@@ -1,63 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Procesamiento de archivos de texto</title>
+  <title>Procesar archivos de texto</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-</head>
-<body>
-  <input type="file" id="fileInput" multiple>
-  <button onclick="processFiles()">Procesar archivos</button>
-
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>Columna 1</th>
-        <th>Columna 2</th>
-        <!-- Agrega aquí las columnas adicionales según tu estructura de datos -->
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-
   <script>
-    function processFiles() {
-      var fileInput = document.getElementById('fileInput');
-      var files = fileInput.files;
+    // Función para leer el archivo de texto y procesarlo
+    function procesarArchivo(archivo) {
+      var lector = new FileReader();
+      lector.onload = function(event) {
+        var contenido = event.target.result;
+        // Procesar el contenido del archivo
+        var datos = contenido.split('\n'); // Separar el contenido por saltos de línea
+        // Hacer algo con los datos (ejemplo: agregarlos a una tabla)
+        var tabla = document.getElementById('tablaDatos');
+        for (var i = 0; i < datos.length; i++) {
+          var fila = document.createElement('tr');
+          var celdas = datos[i].split(';'); // Suponiendo que los datos están separados por ;
+          for (var j = 0; j < celdas.length; j++) {
+            var celda = document.createElement(i === 0 ? 'th' : 'td');
+            celda.textContent = celdas[j];
+            fila.appendChild(celda);
+          }
+          tabla.appendChild(fila);
+        }
+      };
+      lector.readAsText(archivo);
+    }
 
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var reader = new FileReader();
-
-        reader.onload = function(e) {
-          var contents = e.target.result;
-          processData(contents);
-        };
-
-        reader.readAsText(file);
+    // Función para procesar múltiples archivos
+    function procesarArchivos(event) {
+      var archivos = event.target.files;
+      for (var i = 0; i < archivos.length; i++) {
+        procesarArchivo(archivos[i]);
       }
     }
 
-    function processData(contents) {
-      // Aquí puedes procesar y organizar el contenido del archivo
-      // según tus necesidades. Por ejemplo, puedes dividirlo en líneas
-      // o utilizar expresiones regulares para extraer datos específicos.
-
-      // Una vez que tengas los datos organizados, puedes agregarlos a la tabla.
-      var rows = contents.split('\n');
-
-      for (var i = 0; i < rows.length; i++) {
-        var columns = rows[i].split(',');
-
-        var table = document.getElementById('dataTable');
-        var newRow = table.insertRow(-1);
-
-        for (var j = 0; j < columns.length; j++) {
-          var cell = newRow.insertCell(j);
-          cell.innerHTML = columns[j];
+    // Función para exportar la tabla a CSV
+    function exportarCSV() {
+      var tabla = document.getElementById('tablaDatos');
+      var filas = tabla.querySelectorAll('tr');
+      var csv = '';
+      for (var i = 0; i < filas.length; i++) {
+        var celdas = filas[i].querySelectorAll('th, td');
+        for (var j = 0; j < celdas.length; j++) {
+          csv += celdas[j].textContent + ';'; // Separador de campos CSV
         }
+        csv += '\n'; // Salto de línea entre filas
       }
+      // Descargar el archivo CSV
+      var enlace = document.createElement('a');
+      enlace.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+      enlace.setAttribute('download', 'datos.csv');
+      enlace.style.display = 'none';
+      document.body.appendChild(enlace);
+      enlace.click();
+      document.body.removeChild(enlace);
     }
   </script>
+</head>
+<body>
+  <h1>Procesar archivos de texto</h1>
+  <input type="file" id="inputArchivos" multiple onchange="procesarArchivos(event)">
+  <br>
+  <br>
+  <table id="tablaDatos" border="1">
+    <!-- Aquí se mostrarán los datos procesados -->
+  </table>
+  <br>
+  <button onclick="exportarCSV()">Exportar a CSV</button>
 </body>
 </html>
