@@ -1,61 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Subir archivos y mostrar en tabla</title>
+  <title>Procesamiento de archivos de texto</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-  <h1>Subir archivos y mostrar en tabla</h1>
-  <label for="inputArchivos">Seleccionar archivos:</label>
-  <input type="file" id="inputArchivos" multiple style="display: none;">
-  <br>
-  <button id="botonSubir">Subir</button>
+  <input type="file" id="fileInput" multiple>
+  <button id="upload" onclick="processFiles()">Procesar archivos</button>
 
-  <table id="tablaDatos" border="1">
+  <table id="dataTable">
     <thead>
       <tr>
-        <th>Nombre</th>
-        <th>Tamaño</th>
-        <th>Tipo</th>
+        <th>Columna 1</th>
+        <th>Columna 2</th>
+        <!-- Agrega aquí las columnas adicionales según tu estructura de datos -->
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+    </tbody>
   </table>
 
   <script>
-    document.getElementById('botonSubir').addEventListener('click', function() {
-      document.getElementById('inputArchivos').click();
-    });
+    function processFiles() {
+      var fileInput = document.getElementById('fileInput');
+      var files = fileInput.files;
 
-    document.getElementById('inputArchivos').addEventListener('change', function() {
-      var archivos = this.files;
-      var tabla = document.getElementById('tablaDatos').getElementsByTagName('tbody')[0];
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
 
-      // Limpiar tabla antes de agregar nuevos datos
-      tabla.innerHTML = '';
+        reader.onload = function(e) {
+          var contents = e.target.result;
+          processData(contents);
+        };
 
-      // Leer y mostrar información de cada archivo seleccionado
-      for (var i = 0; i < archivos.length; i++) {
-        var fila = document.createElement('tr');
-
-        // Nombre del archivo
-        var celdaNombre = document.createElement('td');
-        celdaNombre.textContent = archivos[i].name;
-        fila.appendChild(celdaNombre);
-
-        // Tamaño del archivo
-        var celdaTamano = document.createElement('td');
-        celdaTamano.textContent = archivos[i].size + ' bytes';
-        fila.appendChild(celdaTamano);
-
-        // Tipo de archivo
-        var celdaTipo = document.createElement('td');
-        celdaTipo.textContent = archivos[i].type;
-        fila.appendChild(celdaTipo);
-
-        // Agregar fila a la tabla
-        tabla.appendChild(fila);
+        reader.readAsText(file);
       }
-    });
+    }
+
+    function processData(contents) {
+      // Aquí puedes procesar y organizar el contenido del archivo
+      // según tus necesidades. Por ejemplo, puedes dividirlo en líneas
+      // o utilizar expresiones regulares para extraer datos específicos.
+
+      // Una vez que tengas los datos organizados, puedes agregarlos a la tabla.
+      var rows = contents.split('\n');
+
+      for (var i = 0; i < rows.length; i++) {
+        var columns = rows[i].split(',');
+
+        var table = document.getElementById('dataTable');
+        var newRow = table.insertRow(-1);
+
+        for (var j = 0; j < columns.length; j++) {
+          var cell = newRow.insertCell(j);
+          cell.innerHTML = columns[j];
+        }
+      }
+    }
   </script>
 </body>
 </html>
+

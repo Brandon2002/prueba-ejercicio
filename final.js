@@ -5,5 +5,11 @@ test('Submit a form', async t => {
     await t
 
         //Fill the name
-        .click("#botonSubir")
+        .setFilesToUpload('#fileInput', [
+            // substitute the following string with the path to a local file or multiple files you want to upload
+            '/prueba-ejercicio/archivo1.txt',
+        ]
+        .click("#upload")
+        );
+
     })
