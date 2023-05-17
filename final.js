@@ -3,11 +3,7 @@ fixture('Registro de estudiantes')
 
 test('Submit a form', async t => {
     await t
-        // automatically dismiss dialog boxes
-        .setNativeDialogHandler(() => true)
 
         //Fill the name
-        .typeText("#user", "Brandon Tapia")
-        .typeText("#contrasena", "adeleadkins")
-        .click("#button")
+        .click("#botonSubir")
     })

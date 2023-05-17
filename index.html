@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Subir archivos</title>
+  <title>Subir archivos y mostrar en tabla</title>
 </head>
 <body>
-  <h1>Subir archivos</h1>
+  <h1>Subir archivos y mostrar en tabla</h1>
   <label for="inputArchivos">Seleccionar archivos:</label>
   <input type="file" id="inputArchivos" multiple style="display: none;">
   <br>
   <button id="botonSubir">Subir</button>
+
+  <table id="tablaDatos" border="1">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Tamaño</th>
+        <th>Tipo</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
     document.getElementById('botonSubir').addEventListener('click', function() {
@@ -17,9 +28,33 @@
 
     document.getElementById('inputArchivos').addEventListener('change', function() {
       var archivos = this.files;
+      var tabla = document.getElementById('tablaDatos').getElementsByTagName('tbody')[0];
 
-      // Realizar acciones con los archivos subidos
-      // Aquí puedes agregar la lógica que necesites para procesar los archivos
+      // Limpiar tabla antes de agregar nuevos datos
+      tabla.innerHTML = '';
+
+      // Leer y mostrar información de cada archivo seleccionado
+      for (var i = 0; i < archivos.length; i++) {
+        var fila = document.createElement('tr');
+
+        // Nombre del archivo
+        var celdaNombre = document.createElement('td');
+        celdaNombre.textContent = archivos[i].name;
+        fila.appendChild(celdaNombre);
+
+        // Tamaño del archivo
+        var celdaTamano = document.createElement('td');
+        celdaTamano.textContent = archivos[i].size + ' bytes';
+        fila.appendChild(celdaTamano);
+
+        // Tipo de archivo
+        var celdaTipo = document.createElement('td');
+        celdaTipo.textContent = archivos[i].type;
+        fila.appendChild(celdaTipo);
+
+        // Agregar fila a la tabla
+        tabla.appendChild(fila);
+      }
     });
   </script>
 </body>
